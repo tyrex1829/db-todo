@@ -4,7 +4,7 @@ env.config();
 import { UserModel, TodoModel } from "./db.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-import { auth } from "./auth.js";
+import { auth, JWT_SECRET } from "./auth.js";
 
 mongoose.connect(process.env.MONGO_URL + "todo-tyrex");
 const app = express();
@@ -12,7 +12,8 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-const JWT_SECRET = process.env.JWT_SECRET;
+// const JWT_SECRET = process.env.JWT_SECRET;
+console.log(JWT_SECRET);
 
 app.get("/", (req, res) => {
   res.send("Landing Page");
@@ -80,10 +81,10 @@ app.post("/todo", auth, async (req, res) => {
 });
 
 app.get("/todos", auth, async (req, res) => {
-  const userID = req.userId;
+  const userId = req.userId;
 
   const todos = await TodoModel.find({
-    userID,
+    userId,
   });
 
   res.json({
